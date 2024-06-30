@@ -26,11 +26,12 @@ void headGoalPoseCallback(const std_msgs::Float64MultiArray::ConstPtr& msg)
         if(goalPan < -3.141592 )
                 goalPan = -3.141592;
 
-        if(goalTilt > 0.47)
-                goalTilt = 0.47;
+	goalTilt = -0.5;
+        //if(goalTilt > 0.47)
+        //        goalTilt = 0.47;
 
-        if(goalTilt < -0.9)
-                goalTilt = -0.9;
+        //if(goalTilt < -0.9)
+        //        goalTilt = -0.9;
 }
 
 void headCurrentPoseCallback(const control_msgs::JointTrajectoryControllerState::ConstPtr& msg)
