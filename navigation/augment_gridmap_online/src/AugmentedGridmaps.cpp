@@ -7,16 +7,27 @@
 
 namespace ros_augmented_gridmaps {
 
-AugmentedGridMap::AugmentedGridMap(ros::NodeHandle &nodeHandle)
-  : nodeHandle_(nodeHandle)
+AugmentedGridMap::AugmentedGridMap(ros::NodeHandle &nodeHandle,
+                                   const std::string& input_map,
+                                   float obstacle_radius,
+                                   bool debug,
+                                   const std::string& env_file_name,
+                                   bool add_static_obstacles)
+  : nodeHandle_(nodeHandle),
+    input_map(input_map),
+    obstacle_radius(obstacle_radius),
+    debug(debug),
+    env_file_name(env_file_name),
+    add_static_obstacles(add_static_obstacles)
 {
   ros::NodeHandle private_nh("~");
+
   // Load parameters
-  private_nh.param<float>("obstacle_radius", obstacle_radius, 0.05);
-  private_nh.param<bool>("debug", debug, false);
-  private_nh.param<std::string>("input_map", input_map, "map");
-  private_nh.param<std::string>("env_file_name", fn_, "env_furniture_rc24_3330_2");
-  private_nh.param<bool>("add_static_obstacles", is_adding_, true);
+  //private_nh.param<float>("obstacle_radius", obstacle_radius, 0.05);
+  //private_nh.param<bool>("debug", debug, false);
+  //private_nh.param<std::string>("input_map", input_map, "map");
+  //private_nh.param<std::string>("env_file_name", fn_, "env_furniture_rc24_3330_2");
+  //private_nh.param<bool>("add_static_obstacles", is_adding_, true);
 
   // Initialize subscribers
   mapSubscriber = nodeHandle_.subscribe(input_map, 1, &AugmentedGridMap::saveMap, this);
@@ -46,7 +57,7 @@ void AugmentedGridMap::saveMap(const nav_msgs::OccupancyGrid &map)
 
   publishEnhancedMap();
 
-  if (is_adding_) {
+  if (add_static_obstacles) {
     ROS_INFO("STARTING DRAWING OBSTACLES");
     drawObstacles();
   }
@@ -234,7 +245,7 @@ int AugmentedGridMap::pointToCell(float coordinate, float origin, float resoluti
 
 void AugmentedGridMap::drawObstacles()
 {
-  std::string yaml_file = ros::package::getPath("hma_env_manage") + "/io/config/" + fn_;
+  std::string yaml_file = ros::package::getPath("hma_env_manage") + "/io/config/" + env_file_name;
 
   try {
     YAML::Node config = YAML::LoadFile(yaml_file);

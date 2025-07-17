@@ -19,6 +19,7 @@ class AugmentedGridMap
 {
 public:
       AugmentedGridMap(ros::NodeHandle& nodeHandle);
+      AugmentedGridMap(ros::NodeHandle& nodeHandle, const std::string& input_map, float obstacle_radius, bool debug, const std::string& env_file_name, bool add_static_obstacles);
       ~AugmentedGridMap();
 
 private:
@@ -50,8 +51,8 @@ private:
       void publishEnhancedMap();
       void publishObstacleMarkers();
 
-      std::string fn_;
-      bool is_adding_;
+      std::string env_file_name;
+      bool add_static_obstacles;
 
       std::vector<geometry_msgs::Point> obstacles;
       std::vector<visualization_msgs::Marker> obstacle_markers_; // markers for obstacles
