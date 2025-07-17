@@ -4,7 +4,7 @@
 
 std::string input_map = "map";
 float obstacle_radius = 0.05;
-bool add_static_obstacles = false;
+bool add_static_obstacles = true;
 std::string env_file_name = "/env_manage_yaml_path";
 bool debug = false;
 
